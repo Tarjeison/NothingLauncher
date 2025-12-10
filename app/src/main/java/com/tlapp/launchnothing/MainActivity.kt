@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tlapp.launchnothing.ui.theme.AppTheme
 import com.tlapp.launchnothing.ui.theme.LaunchNothingTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,13 +38,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppLauncher(viewModel: AllAppsViewModel = viewModel()) {
+fun AppLauncher(viewModel: AllAppsViewModel = hiltViewModel()) {
     val apps by viewModel.apps.collectAsState()
     AppList(apps = apps)
 }
 
 @Composable
-fun AppList(apps: List<AppInfo>) {
+fun AppList(apps: List<UiAppInfo>) {
     val context = LocalContext.current
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(apps) {
@@ -53,7 +53,7 @@ fun AppList(apps: List<AppInfo>) {
                 modifier = Modifier
                     .clickable {
                         val intent =
-                            context.packageManager.getLaunchIntentForPackage(app.packageName.toString())
+                            context.packageManager.getLaunchIntentForPackage(app.packageName)
                         context.startActivity(intent)
                     }
                     .padding(AppTheme.dimensions.paddingSmall)
@@ -64,7 +64,7 @@ fun AppList(apps: List<AppInfo>) {
                     modifier = Modifier.size(AppTheme.dimensions.iconSize)
                 )
                 Column(modifier = Modifier.padding(start = AppTheme.dimensions.paddingSmall)) {
-                    Text(text = app.label.toString())
+                    Text(text = app.appName)
                 }
             }
         }

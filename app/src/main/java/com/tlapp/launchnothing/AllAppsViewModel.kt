@@ -1,39 +1,49 @@
 package com.tlapp.launchnothing
 
-import android.app.Application
-import android.content.Intent
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import androidx.lifecycle.AndroidViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.tlapp.launchnothing.data.AppInfo
+import com.tlapp.launchnothing.data.AppRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-data class AppInfo(
-    val label: CharSequence,
-    val packageName: CharSequence,
+data class UiAppInfo(
+    val appName: String,
+    val packageName: String,
     val icon: Drawable
 )
 
-class AllAppsViewModel(application: Application) : AndroidViewModel(application) {
-    private val _apps = MutableStateFlow<List<AppInfo>>(emptyList())
-    val apps = _apps.asStateFlow()
+@HiltViewModel
+class AllAppsViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context,
+    private val appRepository: AppRepository
+) : ViewModel() {
+
+    private val packageManager: PackageManager = context.packageManager
+
+    val apps = appRepository.apps
+        .map { domainApps ->
+            domainApps.map { appInfo ->
+                val icon = packageManager.getApplicationIcon(appInfo.packageName)
+                UiAppInfo(appInfo.label, appInfo.packageName, icon)
+            }
+        }
+        .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        loadApps()
-    }
-
-    private fun loadApps() {
-        val context = getApplication<Application>().applicationContext
-        val packageManager = context.packageManager
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
+        viewModelScope.launch {
+            appRepository.syncApps()
         }
-        val appInfos = packageManager.queryIntentActivities(intent, 0).map {
-            AppInfo(
-                label = it.loadLabel(packageManager),
-                packageName = it.activityInfo.packageName,
-                icon = it.loadIcon(packageManager)
-            )
-        }
-        _apps.value = appInfos
     }
 }
