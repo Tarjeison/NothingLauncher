@@ -3,7 +3,7 @@ package com.tlapp.launchnothing.data.source
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.tlapp.launchnothing.data.AppRepository
+import com.tlapp.launchnothing.data.repository.AppRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

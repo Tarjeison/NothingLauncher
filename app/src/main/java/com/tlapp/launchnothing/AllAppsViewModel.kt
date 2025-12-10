@@ -5,8 +5,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tlapp.launchnothing.data.AppInfo
-import com.tlapp.launchnothing.data.AppRepository
+import com.tlapp.launchnothing.data.repository.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
