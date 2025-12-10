@@ -1,4 +1,4 @@
-package com.tlapp.freelauncher.ui.theme
+package com.tlapp.launchnothing.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

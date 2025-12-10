@@ -1,4 +1,4 @@
-package com.tlapp.freelauncher.ui.theme
+package com.tlapp.launchnothing.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

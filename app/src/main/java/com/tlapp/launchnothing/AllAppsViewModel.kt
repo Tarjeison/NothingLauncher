@@ -1,4 +1,4 @@
-package com.tlapp.freelauncher
+package com.tlapp.launchnothing
 
 import android.app.Application
 import android.content.Intent

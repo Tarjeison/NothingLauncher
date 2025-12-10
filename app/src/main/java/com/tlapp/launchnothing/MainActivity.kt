@@ -1,4 +1,4 @@
-package com.tlapp.freelauncher
+package com.tlapp.launchnothing
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tlapp.freelauncher.ui.theme.AppTheme
-import com.tlapp.freelauncher.ui.theme.LaunchNothingTheme
+import com.tlapp.launchnothing.ui.theme.AppTheme
+import com.tlapp.launchnothing.ui.theme.LaunchNothingTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

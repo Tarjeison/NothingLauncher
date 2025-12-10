@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.tlapp.freelauncher"
+    namespace = "com.tlapp.launchnothing"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.tlapp.freelauncher"
+        applicationId = "com.tlapp.launchnothing"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
