@@ -1,19 +1,15 @@
 package com.tlapp.freelauncher
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -23,9 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tlapp.freelauncher.ui.theme.AppTheme
 import com.tlapp.freelauncher.ui.theme.LaunchNothingTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,10 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LaunchNothingTheme {
-                enableEdgeToEdge()
-                Box(modifier = Modifier.systemBarsPadding()) {
-                    AppLauncher()
-                }
+                AppLauncher()
             }
         }
     }
@@ -61,14 +54,14 @@ fun AppList(apps: List<AppInfo>) {
                             context.packageManager.getLaunchIntentForPackage(app.packageName.toString())
                         context.startActivity(intent)
                     }
-                    .padding(8.dp)
+                    .padding(AppTheme.dimensions.paddingSmall)
             ) {
                 Image(
                     bitmap = app.icon.toBitmap().asImageBitmap(),
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(AppTheme.dimensions.iconSize)
                 )
-                Column(modifier = Modifier.padding(start = 8.dp)) {
+                Column(modifier = Modifier.padding(start = AppTheme.dimensions.paddingSmall)) {
                     Text(text = app.label.toString())
                 }
             }
