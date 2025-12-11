@@ -15,7 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tlapp.launchnothing.data.models.AppInfo
 import com.tlapp.launchnothing.ui.theme.AppTheme
 import com.tlapp.launchnothing.ui.theme.LaunchNothingTheme
