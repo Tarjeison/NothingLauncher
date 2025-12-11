@@ -25,7 +25,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun LaunchNothingTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // Disabled by default
     dimensions: Dimensions = Dimensions(),
     content: @Composable () -> Unit
 ) {
