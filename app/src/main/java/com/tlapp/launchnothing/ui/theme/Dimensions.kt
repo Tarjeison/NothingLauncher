@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 
 data class Dimensions(
     val paddingSmall: Dp = 8.dp,
+    val paddingMedium: Dp = 16.dp,
     val iconSize: Dp = 48.dp
 )
 

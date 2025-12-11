@@ -1,4 +1,4 @@
-package com.tlapp.launchnothing
+package com.tlapp.launchnothing.feature.all_apps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
