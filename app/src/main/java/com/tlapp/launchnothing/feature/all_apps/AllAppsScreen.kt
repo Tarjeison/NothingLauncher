@@ -72,16 +72,18 @@ private fun AppList(
                         .padding(AppTheme.dimensions.paddingMedium)
                 )
                 if (expandedAppPackageName == app.packageName) {
-                    Text(
-                        text = "Uninstall",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .clickable {
-                                onUninstallAppClicked(app.packageName)
-                            }
-                            .padding(AppTheme.dimensions.paddingMedium)
-                            .padding(start = AppTheme.dimensions.paddingMedium)
-                    )
+                    if (!app.isSystemApp) {
+                        Text(
+                            text = "Uninstall",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .clickable {
+                                    onUninstallAppClicked(app.packageName)
+                                }
+                                .padding(AppTheme.dimensions.paddingMedium)
+                                .padding(start = AppTheme.dimensions.paddingMedium)
+                        )
+                    }
                 }
             }
         }

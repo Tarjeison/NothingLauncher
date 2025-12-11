@@ -6,4 +6,5 @@ import com.tlapp.launchnothing.data.models.AppInfo
 fun App.toAppInfo(): AppInfo = AppInfo(
     packageName = packageName,
     label = label,
+    isSystemApp = isSystemApp,
 )

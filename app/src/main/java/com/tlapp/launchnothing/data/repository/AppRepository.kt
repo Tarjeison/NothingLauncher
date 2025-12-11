@@ -2,9 +2,9 @@ package com.tlapp.launchnothing.data.repository
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import com.tlapp.launchnothing.data.db.App
 import com.tlapp.launchnothing.data.db.AppDao
-import com.tlapp.launchnothing.data.repository.toAppInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -31,9 +31,11 @@ class AppRepository @Inject constructor(
         val activities = context.packageManager.queryIntentActivities(intent, 0)
         val installedApp = activities.find { it.activityInfo.packageName == packageName } ?: return
 
+        val isSystemApp = (installedApp.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
         val app = App(
             packageName = installedApp.activityInfo.packageName,
-            label = installedApp.loadLabel(context.packageManager).toString()
+            label = installedApp.loadLabel(context.packageManager).toString(),
+            isSystemApp = isSystemApp
         )
         appDao.upsert(app)
     }
@@ -43,10 +45,12 @@ class AppRepository @Inject constructor(
             addCategory(Intent.CATEGORY_LAUNCHER)
         }
         val freshApps = context.packageManager.queryIntentActivities(intent, 0)
-            .map {
+            .map { resolveInfo ->
+                val isSystemApp = (resolveInfo.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
                 App(
-                    packageName = it.activityInfo.packageName,
-                    label = it.loadLabel(context.packageManager).toString()
+                    packageName = resolveInfo.activityInfo.packageName,
+                    label = resolveInfo.loadLabel(context.packageManager).toString(),
+                    isSystemApp = isSystemApp
                 )
             }
 

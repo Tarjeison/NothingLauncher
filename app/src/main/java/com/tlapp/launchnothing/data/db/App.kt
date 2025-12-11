@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "apps")
 data class App(
     @PrimaryKey val packageName: String,
-    val label: String
+    val label: String,
+    val isSystemApp: Boolean,
 )
