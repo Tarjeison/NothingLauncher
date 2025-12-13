@@ -24,4 +24,10 @@ interface AppDao {
 
     @Query("DELETE FROM apps WHERE packageName IN (:packageNames)")
     suspend fun deleteApps(packageNames: List<String>)
+
+    @Query("UPDATE apps SET isFavorite = :isFavorite WHERE packageName = :packageName")
+    suspend fun setFavorite(
+        packageName: String,
+        isFavorite: Boolean,
+    )
 }

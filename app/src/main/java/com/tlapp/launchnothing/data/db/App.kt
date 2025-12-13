@@ -8,4 +8,5 @@ data class App(
     @PrimaryKey val packageName: String,
     val label: String,
     val isSystemApp: Boolean,
+    val isFavorite: Boolean,
 )

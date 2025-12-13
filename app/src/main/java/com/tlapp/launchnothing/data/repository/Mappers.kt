@@ -7,4 +7,5 @@ fun App.toAppInfo(): AppInfo = AppInfo(
     packageName = packageName,
     label = label,
     isSystemApp = isSystemApp,
+    isFavorite = isFavorite,
 )

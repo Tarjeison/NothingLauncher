@@ -3,6 +3,7 @@ package com.tlapp.launchnothing.feature.all_apps
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tlapp.launchnothing.data.repository.AppRepository
+import com.tlapp.launchnothing.domain.usecase.ToggleFavoriteUseCase
 import com.tlapp.launchnothing.domain.usecase.UninstallAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class AllAppsViewModel @Inject constructor(
     private val appRepository: AppRepository,
     private val uninstallAppUseCase: UninstallAppUseCase,
+    private val toggleFavoriteUseCase: ToggleFavoriteUseCase,
 ) : ViewModel() {
 
     private val _expandedAppPackageName = MutableStateFlow<String?>(null)
@@ -38,6 +40,15 @@ class AllAppsViewModel @Inject constructor(
 
     fun onDismissMenu() {
         _expandedAppPackageName.value = null
+    }
+
+    fun onToggleFavorite(
+        packageName: String,
+        isFavorite: Boolean,
+    ) {
+        viewModelScope.launch {
+            toggleFavoriteUseCase(packageName, isFavorite)
+        }
     }
 
     fun onUninstallAppClicked(
