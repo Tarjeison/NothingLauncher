@@ -1,25 +1,17 @@
 package com.tlapp.launchnothing.feature.all_apps
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.tlapp.launchnothing.common.ui.AppListItem
 import com.tlapp.launchnothing.data.models.AppInfo
-import com.tlapp.launchnothing.ui.theme.AppTheme
 
 @Composable
 fun AllAppsScreen(
@@ -28,6 +20,7 @@ fun AllAppsScreen(
 ) {
     val apps by viewModel.apps.collectAsState()
     val expandedAppPackageName by viewModel.expandedAppPackageName.collectAsState()
+
     AppList(
         apps = apps,
         expandedAppPackageName = expandedAppPackageName,
@@ -35,11 +28,10 @@ fun AllAppsScreen(
         onUninstallAppClicked = viewModel::onUninstallAppClicked,
         onToggleFavorite = viewModel::onToggleFavorite,
         onDismissMenu = viewModel::onDismissMenu,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun AppList(
     apps: List<AppInfo>,
@@ -55,52 +47,23 @@ private fun AppList(
         modifier = modifier.fillMaxSize(),
     ) {
         items(apps) { app ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize(),
-            ) {
-                Text(
-                    text = app.label,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .combinedClickable(
-                            onClick = {
-                                if (expandedAppPackageName == app.packageName) {
-                                    onDismissMenu()
-                                } else {
-                                    val intent =
-                                        context.packageManager.getLaunchIntentForPackage(app.packageName)
-                                    context.startActivity(intent)
-                                }
-                            },
-                            onLongClick = {
-                                onAppLongPressed(app.packageName)
-                            },
-                        )
-                        .padding(AppTheme.dimensions.paddingMedium),
-                )
-                if (expandedAppPackageName == app.packageName) {
-                    Text(
-                        text = if (app.isFavorite) "Unfavorite" else "Favorite",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .clickable { onToggleFavorite(app.packageName, !app.isFavorite) }
-                            .padding(AppTheme.dimensions.paddingMedium)
-                            .padding(start = AppTheme.dimensions.paddingMedium),
-                    )
-                    if (!app.isSystemApp) {
-                        Text(
-                            text = "Uninstall",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier
-                                .clickable { onUninstallAppClicked(app.packageName) }
-                                .padding(AppTheme.dimensions.paddingMedium)
-                                .padding(start = AppTheme.dimensions.paddingMedium),
-                        )
+            AppListItem(
+                app = app,
+                isExpanded = expandedAppPackageName == app.packageName,
+                onAppClick = {
+                    if (expandedAppPackageName == app.packageName) {
+                        onDismissMenu()
+                    } else {
+                        val intent =
+                            context.packageManager.getLaunchIntentForPackage(app.packageName)
+                        context.startActivity(intent)
                     }
-                }
-            }
+                },
+                onAppLongClick = { onAppLongPressed(app.packageName) },
+                onToggleFavorite = { onToggleFavorite(app.packageName, !app.isFavorite) },
+                onUninstallClick = { onUninstallAppClicked(app.packageName) },
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
     }
 }
