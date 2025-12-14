@@ -10,6 +10,9 @@ interface AppDao {
     @Query("SELECT * FROM apps ORDER BY label ASC")
     fun getApps(): Flow<List<App>>
 
+    @Query("SELECT * FROM apps WHERE isFavorite = 1 ORDER BY label ASC")
+    fun getFavoriteApps(): Flow<List<App>>
+
     @Query("SELECT * FROM apps")
     suspend fun getAppsOnce(): List<App>
 

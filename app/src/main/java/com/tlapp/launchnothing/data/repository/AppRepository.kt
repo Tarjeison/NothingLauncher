@@ -20,6 +20,11 @@ class AppRepository @Inject constructor(
             dbApps.map { it.toAppInfo() }
         }
 
+    val favoriteApps = appDao.getFavoriteApps()
+        .map { dbApps ->
+            dbApps.map { it.toAppInfo() }
+        }
+
     suspend fun setFavorite(
         packageName: String,
         isFavorite: Boolean,
@@ -43,40 +48,5 @@ class AppRepository @Inject constructor(
             isFavorite = false,
         )
         appDao.upsert(app)
-    }
-
-    suspend fun syncApps() {
-        val freshResolveInfos = context.packageManager.queryIntentActivities(
-            Intent(Intent.ACTION_MAIN, null).apply { addCategory(Intent.CATEGORY_LAUNCHER) },
-            0
-        )
-
-        val staleApps = appDao.getAppsOnce()
-        val staleAppsMap = staleApps.associateBy { it.packageName }
-
-        val freshPackageNames = freshResolveInfos.map { it.activityInfo.packageName }.toSet()
-        val stalePackageNames = staleAppsMap.keys
-
-        val appsToDelete = stalePackageNames - freshPackageNames
-        if (appsToDelete.isNotEmpty()) {
-            appDao.deleteApps(appsToDelete.toList())
-        }
-
-        val appsToUpsert = freshResolveInfos.map { resolveInfo ->
-            val packageName = resolveInfo.activityInfo.packageName
-            val existingApp = staleAppsMap[packageName]
-            val isSystemApp = (resolveInfo.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-
-            App(
-                packageName = packageName,
-                label = resolveInfo.loadLabel(context.packageManager).toString(),
-                isSystemApp = isSystemApp,
-                isFavorite = existingApp?.isFavorite == true
-            )
-        }
-
-        if (appsToUpsert.isNotEmpty()) {
-            appDao.upsertApps(appsToUpsert)
-        }
     }
 }
