@@ -7,8 +7,8 @@ import com.tlapp.launchnothing.domain.usecase.ToggleFavoriteUseCase
 import com.tlapp.launchnothing.domain.usecase.UninstallAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,12 +25,6 @@ class AllAppsViewModel @Inject constructor(
 
     val apps = appRepository.apps
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    init {
-        viewModelScope.launch {
-            appRepository.syncApps()
-        }
-    }
 
     fun onAppLongPressed(
         packageName: String,

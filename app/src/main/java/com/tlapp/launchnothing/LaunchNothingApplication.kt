@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.tlapp.launchnothing.data.repository.AppRepository
 import com.tlapp.launchnothing.data.source.PackageChangeReceiver
+import com.tlapp.launchnothing.domain.usecase.SyncAppsUseCase
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -18,9 +20,16 @@ class LaunchNothingApplication : Application() {
     @Inject
     lateinit var externalScope: CoroutineScope
 
+    @Inject
+    lateinit var syncAppsUseCase: SyncAppsUseCase
+
     override fun onCreate() {
         super.onCreate()
         registerReceiver()
+
+        externalScope.launch {
+            syncAppsUseCase()
+        }
     }
 
     private fun registerReceiver() {
