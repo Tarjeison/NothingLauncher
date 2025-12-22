@@ -2,16 +2,19 @@ package com.tlapp.launchnothing.feature.all_apps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tlapp.launchnothing.data.models.AppInfo
 import com.tlapp.launchnothing.data.repository.AppRepository
 import com.tlapp.launchnothing.domain.usecase.ToggleFavoriteUseCase
 import com.tlapp.launchnothing.domain.usecase.UninstallAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
 
 @HiltViewModel
 class AllAppsViewModel @Inject constructor(
@@ -21,10 +24,20 @@ class AllAppsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _expandedAppPackageName = MutableStateFlow<String?>(null)
-    val expandedAppPackageName = _expandedAppPackageName.asStateFlow()
 
-    val apps = appRepository.apps
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val uiState = combine(
+        appRepository.apps,
+        _expandedAppPackageName,
+    ) { apps, expandedAppPackageName ->
+        AllAppsUiState(
+            apps = apps,
+            expandedAppPackageName = expandedAppPackageName,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = AllAppsUiState(),
+    )
 
     fun onAppLongPressed(
         packageName: String,

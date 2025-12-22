@@ -2,16 +2,22 @@ package com.tlapp.launchnothing.feature.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tlapp.launchnothing.data.models.AppInfo
 import com.tlapp.launchnothing.data.repository.AppRepository
 import com.tlapp.launchnothing.domain.usecase.ToggleFavoriteUseCase
 import com.tlapp.launchnothing.domain.usecase.UninstallAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class FavoritesUiState(
+    val apps: List<AppInfo> = emptyList(),
+    val expandedAppPackageName: String? = null,
+)
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
@@ -21,10 +27,20 @@ class FavoritesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _expandedAppPackageName = MutableStateFlow<String?>(null)
-    val expandedAppPackageName = _expandedAppPackageName.asStateFlow()
 
-    val favoriteApps = appRepository.favoriteApps
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val uiState = combine(
+        appRepository.favoriteApps,
+        _expandedAppPackageName,
+    ) { favoriteApps, expandedAppPackageName ->
+        FavoritesUiState(
+            apps = favoriteApps,
+            expandedAppPackageName = expandedAppPackageName,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = FavoritesUiState(),
+    )
 
     fun onAppLongPressed(
         packageName: String,

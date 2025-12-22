@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.tlapp.launchnothing.feature.all_apps.AllAppsScreen
+import com.tlapp.launchnothing.feature.favorites.FavoritesScreen
 import com.tlapp.launchnothing.ui.theme.LaunchNothingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LaunchNothingTheme {
                 Scaffold { innerPadding ->
-                    AllAppsScreen(
+                    FavoritesScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

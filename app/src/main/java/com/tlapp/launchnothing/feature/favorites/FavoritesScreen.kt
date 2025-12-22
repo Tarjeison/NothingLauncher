@@ -1,4 +1,4 @@
-package com.tlapp.launchnothing.feature.all_apps
+package com.tlapp.launchnothing.feature.favorites
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,9 +8,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.tlapp.launchnothing.common.ui.AppList
 
 @Composable
-fun AllAppsScreen(
+fun FavoritesScreen(
     modifier: Modifier = Modifier,
-    viewModel: AllAppsViewModel = hiltViewModel(),
+    viewModel: FavoritesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
